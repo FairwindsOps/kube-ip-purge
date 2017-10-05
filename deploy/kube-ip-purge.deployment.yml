@@ -20,6 +20,11 @@ spec:
       - name: kube-ip-purge
         image: quay.io/reactiveops/kube-ip-purge:latest
         imagePullPolicy: Always
+        livenessProbe:
+          exec:
+            command: ["/bin/bash", "-ec", "[[ $(($(date +%s) - $(date +%s -r /lastloop))) -lt 300 ]]"]
+          initialDelaySeconds: 60
+          periodSeconds: 120
         resources:
           limits:
             cpu: 100m
