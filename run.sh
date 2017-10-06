@@ -16,7 +16,7 @@ do
   kubectl exec -i -c weave -n kube-system ${weave_pod} -- /bin/sh -c \
     'curl -s http://127.0.0.1:6784/status/ipam | \
     grep unreachable\\!$ | \
-    sed -E "s/.*\(ip-([0-9-]+).*/127.0.0.1:6784\/peer\/\1/" | \
+    sed -E "s/.*\(ip-([0-9-]+).*/127.0.0.1:6784\/peer\/ip-\1/" | \
     sort | \
     uniq | grep -Ev "('"${node_regex}"')" | \
     xargs -n 1 curl -sX DELETE'
