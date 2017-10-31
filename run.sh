@@ -19,6 +19,8 @@ do
     sed -E "s/.*\(ip-([0-9-]+).*/127.0.0.1:6784\/peer\/ip-\1\n127.0.0.1:6784\/peer\/ip-\1.ec2.internal/" | \
     sort | \
     uniq | grep -Ev "('"${node_regex}"')" | \
+    echo "127.0.0.1:6784/peer/minimumOneHost
+    $(cat -)" | \
     xargs -n 1 curl -sX DELETE'
   echo "Done."
   touch /lastloop
