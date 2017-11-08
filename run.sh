@@ -16,11 +16,11 @@ do
   kubectl exec -i -c weave -n kube-system ${weave_pod} -- /bin/sh -c \
     'curl -s http://127.0.0.1:6784/status/ipam | \
     grep unreachable\\!$ | \
-    sed -E "s/.*\(ip-([0-9-]+).*/127.0.0.1:6784\/peer\/ip-\1\n127.0.0.1:6784\/peer\/ip-\1.ec2.internal/" | \
+    grep -Ev "('"${node_regex}"')" | \
+    sed -E "s/^([a-f0-9:]+)\(.*/127.0.0.1:6784\/peer\/\1/" | \
     sort | \
-    uniq | grep -Ev "('"${node_regex}"')" | \
-    echo "127.0.0.1:6784/peer/minimumOneHost
-    $(cat -)" | \
+    uniq | \
+    echo -e "127.0.0.1:6784/peer/minimumOneHost\n$(cat -)" | \
     xargs -n 1 curl -sX DELETE'
   echo "Done."
   touch /lastloop
